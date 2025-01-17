@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSG : Omar Service et Gestion</title>
+    <link rel="stylesheet" href="css projet gestion de stock de voiture.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<body>
+    <header><big>OSG</big> Omar Service et Gestion</header>
+    <!-- Formulaire de Connexion -->
+    <div id="login-form" class="form-container">
+        <form id="loginForm">
+            <h1>Connectez-vous</h1>
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" name="username" placeholder="Veuillez saisir votre nom d'utilisateur" required>
+            
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" placeholder="Veuillez saisir votre mot de passe" required>
+            
+            <p id="error-msg" class="error-msg"></p>
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+
+    <!-- Page d'Accueil avec Sidebar -->
+    <div id="home-page" class="home-container hidden">
+        <div id="sidebar" class="sidebar">
+            <button id="closeSidebar" class="close-btn">×</button>
+            <ul>
+                <li><a href="#acc"><i class="bx bx-home"></i> Accueil</a></li>
+                <li><a href="#gesVehicule"><i class="bx bx-car"></i> Gestion des Véhicules</a></li>
+                <li><a href="#gesCommande"><i class="bx bx-cart"></i> Gestion des Commandes</a></li>
+                <li><a href="#logout" id="logoutBtn"><i class="bx bx-log-out"></i> Déconnexion</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <button id="openSidebar" class="open-btn">☰</button>
+            <h1>Bienvenue dans notre site web</h1>
+
+            <!-- Tableau de Bord -->
+            <section>
+                <h1 id="acc">Tableau de Bord - Kilométrage des Véhicules</h1>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <canvas id="kmChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+                <!-- Cartes Statistiques -->
+                <div class="row mt-4">
+                    <!-- Total des Véhicules -->
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total des Véhicules</h5>
+                                <p class="card-text" id="total-vehicles">0</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Kilométrage Moyen -->
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Kilométrage Moyen</h5>
+                                <p class="card-text" id="average-km">0 km</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Véhicule le Plus Utilisé -->
+                    <div class="col-md-4">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Véhicule le Plus Utilisé</h5>
+                                <p class="card-text" id="most-used-vehicle">N/A</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Véhicule le Moins Utilisé -->
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Véhicule le Moins Utilisé</h5>
+                                <p class="card-text" id="least-used-vehicle">N/A</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Véhicule le Plus Récent -->
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Véhicule le Plus Récent</h5>
+                                <p class="card-text" id="most-recent-vehicle">N/A</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Véhicule le Plus Ancien -->
+                    <div class="col-md-4">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Véhicule le Plus Ancien</h5>
+                                <p class="card-text" id="oldest-vehicle">N/A</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                </div>
+            </section> <br>
+
+ <!-- Gestion des Voitures -->
+<section>
+    <h1 id="gesVehicule">Gestion des Voitures</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Kilométrage</th>
+                <th>Année</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="vehicles">
+            <!-- Contenu dynamique -->
+        </tbody>
+    </table><br>
+
+    <!-- Formulaire d'édition pour les voitures -->
+<div id="editVehicleFormContainer" class="hidden form-overlay">
+    <form id="editVehicleForm" class="form-card">
+        <h3>Modifier Voiture</h3>
+        <label for="editVehicleMarque">Marque</label>
+        <input type="text" id="editVehicleMarque" required>
+
+        <label for="editVehicleModele">Modèle</label>
+        <input type="text" id="editVehicleModele" required>
+
+        <label for="editVehicleKilometrage">Kilométrage</label>
+        <input type="number" id="editVehicleKilometrage" required>
+
+        <label for="editVehicleAnnee">Année</label>
+        <input type="number" id="editVehicleAnnee" required>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <button type="button" id="cancelEditVehicleBtn" class="btn btn-secondary">Annuler</button>
+        </div>
+    </form>
+</div>
+
+    <button id="showAddCarFormBtn" class="btn btn-primary mb-3">Ajouter une voiture</button>
+    <div id="addCarFormContainer" class="hidden form-overlay">
+        <form id="carForm" class="form-card">
+            <label for="marque">Marque</label>
+            <input type="text" id="marque" name="marque" required placeholder="Veuillez saisir la marque du véhicule">
+
+            <label for="modele">Modèle</label>
+            <input type="text" id="modele" name="modele" required placeholder="Veuillez saisir le modéle du véhicule">
+
+            <label for="annee">Année</label>
+            <input type="number" id="annee" name="annee" required placeholder="Veuillez saisir l'année du véhicule">
+
+            <label for="kilometrage">Kilométrage</label>
+            <input type="number" id="kilometrage" name="kilometrage" required placeholder="Veuillez saisir le kilométrage du véhicule">
+
+            <div class="form-buttons">
+                <button type="submit" id="successAddCarFormBtn" class="btn btn-success">Enregistrer</button>
+                <button type="button" id="cancelAddCarFormBtn" class="btn btn-secondary">Annuler</button>
+            </div>
+        </form>
+    </div>
+            </section><br>
+
+   <!-- Section Gestion des Commandes -->
+<section>
+    <h1 id="gesCommande">Gestion des Commandes</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Date de commande</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="commande">
+            <!-- Contenu dynamique -->
+        </tbody>
+    </table><br>
+
+    
+<!-- Formulaire d'édition pour les commandes -->
+<div id="editCommandeFormContainer" class="hidden form-overlay">
+    <form id="editCommandeForm" class="form-card">
+        <h3>Modifier Commande</h3>
+        <label for="editCommandeNom">Nom</label>
+        <input type="text" id="editCommandeNom" required>
+
+        <label for="editCommandePrenom">Prénom</label>
+        <input type="text" id="editCommandePrenom" required>
+
+        <label for="editCommandeEmail">Email</label>
+        <input type="email" id="editCommandeEmail" required>
+
+        <label for="editCommandeTel">Téléphone</label>
+        <input type="text" id="editCommandeTel" required>
+
+        <label for="editCommandeMarque">Marque</label>
+        <input type="text" id="editCommandeMarque" required>
+
+        <label for="editCommandeModele">Modèle</label>
+        <input type="text" id="editCommandeModele" required>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <button type="button" id="cancelEditCommandeBtn" class="btn btn-secondary">Annuler</button>
+        </div>
+    </form>
+</div>
+
+    <button id="showAddCommandeFormBtn" class="btn btn-primary mb-3">Ajouter une commande</button>
+    <div id="addCommandeFormContainer" class="hidden form-overlay">
+        <form id="commandeForm" class="form-card">
+            <label for="nomc">Nom</label>
+            <input type="text" id="nomc" name="nomc" required placeholder="Veuillez saisir votre nom">
+
+            <label for="prenomc">Prénom</label>
+            <input type="text" id="prenomc" name="prenomc" required placeholder="Veuillez saisir votre prenom">
+
+            <label for="adressemailc">Email</label>
+            <input type="email" id="adressemailc" name="adressemailc" required placeholder="Veuillez saisir votre adresse email">
+
+            <label for="numerotelc">Téléphone</label>
+            <input type="number" id="numerotelc" name="numerotelc" required placeholder="Veuillez saisir votre numéro de télephone">
+
+            <label for="datec">Date de commande</label>
+            <input type="date" id="datec" name="datec" required placeholder="Veuillez saisir la date de commande">
+
+            <label for="marquec">Marque</label>
+            <input type="text" id="marquec" name="marquec" required placeholder="Veuillez saisir la marque du véhicule">
+
+            <label for="modelec">Modèle</label>
+            <input type="text" id="modelec" name="modelec" required placeholder="Veuillez saisir le modéle du véhicule">
+
+            <div class="form-buttons">
+                <button type="submit" id="successAddCommandeFormBtn" class="btn btn-success">Enregistrer</button>
+                <button type="button" id="cancelAddCommandeFormBtn" class="btn btn-secondary">Annuler</button>
+            </div>
+        </form>
+    </div>
+</section><br><br>
+    
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <footer><p>OSG Omar Service et Gestion PRODUCTION. all rights is reserved &copy; 2024 </p> </footer>
+</body>
+</html>
